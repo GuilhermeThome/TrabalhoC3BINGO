@@ -1,93 +1,102 @@
-const boards = [];
-const usedNumbers = new Set();
-let playerCount = 1;
-
-function novoSorteio() {
-  if (usedNumbers.size === 75) {
-    alert("Todos os números foram sorteados!");
-    return;
-  }
-
-  let newNumber;
-  do {
-    newNumber = gerarNumero(1, 75);
-  } while (usedNumbers.has(newNumber));
-
-  usedNumbers.add(newNumber);
-  marcarNumero(newNumber);
-  exibirNumeroSorteado(newNumber);
-
-  if (usedNumbers.size === 75) {
-    alert("Todos os números foram sorteados!");
-  }
-}
-function exibirNumeroSorteado(numero) {
-  const numeroSorteadoElement = document.getElementById('numero-sorteado');
-  numeroSorteadoElement.innerText = numero;
-}
-function gerarNumero(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function marcarNumero(numero) {
-  const numberElements = document.querySelectorAll('.card .number');
-  numberElements.forEach(element => {
-    if (element.innerText === numero.toString()) {
-      element.classList.add('marked');
-    }
-  });
-}
+const cartelas = [];
+const numerosSorteados = new Set();
+const letras = ['B', 'I', 'N', 'G', 'O'];
 
 function gerarCartela() {
-  const cardNumbers = [];
-  while (cardNumbers.length < 25) {
-    const num = gerarNumero(1, 75);
-    if (!cardNumbers.includes(num)) {
-      cardNumbers.push(num);
+  const nome = prompt('Digite seu nome:');
+  const numeros = [];
+  let start = 1;
+  
+  const cartelaDiv = document.createElement('div');
+  cartelaDiv.classList.add('cartela');
+  
+  const h2 = document.createElement('h2');
+  h2.textContent = `${nome}'s Cartela`;
+  cartelaDiv.appendChild(h2);
+  
+  const bingoDiv = document.createElement('div');
+  bingoDiv.classList.add('bingo');
+  bingoDiv.textContent = 'B';
+  cartelaDiv.appendChild(bingoDiv);
+  
+  bingoDiv.classList.add('bingo');
+  bingoDiv.textContent = 'I';
+  cartelaDiv.appendChild(bingoDiv);
+  
+  bingoDiv.classList.add('bingo');
+  bingoDiv.textContent = 'N';
+  cartelaDiv.appendChild(bingoDiv);
+  
+  bingoDiv.classList.add('bingo');
+  bingoDiv.textContent = 'G';
+  cartelaDiv.appendChild(bingoDiv);
+  
+  bingoDiv.classList.add('bingo');
+  bingoDiv.textContent = 'O';
+  cartelaDiv.appendChild(bingoDiv);
+  
+  for (let i = 0; i < 5; i++) {
+    const colunaDiv = document.createElement('div');
+    colunaDiv.classList.add('coluna');
+    
+    for (let j = 0; j < 5; j++) {
+      const cellDiv = document.createElement('div');
+      cellDiv.classList.add('celula');
+      
+      if (i === 2 && j === 2) {
+        cellDiv.textContent = 'FREE';
+      } else {
+        let num;
+        do {
+          num = Math.floor(Math.random() * 15) + start;
+        } while (numeros.includes(num));
+        numeros.push(num);
+        cellDiv.textContent = num;
+        cellDiv.id = letras[j] + num;
+      }
+      
+      colunaDiv.appendChild(cellDiv);
+    }
+    
+    cartelaDiv.appendChild(colunaDiv);
+    start += 15;
+  }
+  
+  document.getElementById('cartelas').appendChild(cartelaDiv);
+}
+
+function sortearNumero() {
+  let numero;
+  do {
+    numero = Math.floor(Math.random() * 75) + 1;
+  } while (numerosSorteados.has(numero));
+
+  const sorteioP = document.createElement('p');
+  sorteioP.textContent = `Número sorteado: ${numero}`;
+  
+  const historico = document.getElementById('sorteio');
+  if (historico.childElementCount >= 5) {
+    historico.removeChild(historico.firstChild); // Remove o mais antigo do histórico
+  }
+  
+  historico.appendChild(sorteioP);
+
+  for (let i = 0; i < letras.length; i++) {
+    const cellId = document.getElementById(`${letras[i]}${numero}`);
+    if (cellId) {
+      cellId.classList.add('sorteado');
     }
   }
-  return cardNumbers;
+
+  numerosSorteados.add(numero);
+  verificarVencedores(numero);
 }
 
-function criarCartela() {
-  const card = document.createElement('div');
-  card.classList.add('card');
-
-  const numbers = gerarCartela();
-
-  const numbersContainer = document.createElement('div');
-  numbersContainer.classList.add('numbers');
-
-  numbers.forEach(num => {
-    const numberDiv = document.createElement('div');
-    numberDiv.classList.add('number');
-    numberDiv.innerText = num;
-    numbersContainer.appendChild(numberDiv);
-  });
-
-  card.appendChild(numbersContainer);
-  return card;
-}
-
-function criarTabuleiro() {
-  const bingoBoard = document.getElementById('bingo-board');
-  for (let i = 0; i < playerCount; i++) {
-    const card = criarCartela();
-    boards.push(card);
-    bingoBoard.appendChild(card);
-  }
+function verificarVencedores(numero) {
+  // Lógica para verificar os vencedores
 }
 
 function iniciarJogo() {
-  const input = document.getElementById('player-count');
-  playerCount = parseInt(input.value, 10);
-  if (playerCount >= 1 && playerCount <= 5) {
-    const bingoBoard = document.getElementById('bingo-board');
-    bingoBoard.innerHTML = '';
-    boards.length = 0;
-    usedNumbers.clear();
-    criarTabuleiro();
-  } else {
-    alert('Escolha um número de jogadores válido (1 a 5).');
-  }
+  const iniciarBotao = document.getElementById('iniciarJogo');
+  iniciarBotao.style.display = 'none';
 }

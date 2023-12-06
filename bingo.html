@@ -7,22 +7,13 @@
 </head>
 <body>
   <h1>Bingo</h1>
-  <label for="player-count">Escolha o número de jogadores (1 a 5):</label>
-  <input type="number" id="player-count" min="1" max="5">
-  <button onclick="iniciarJogo()">Iniciar Jogo</button>
-  <div id="bingo-board" class="bingo-board"></div>
-  <div class="bingo-numbers">
-    <h2>Número Sorteado</h2>
-    <table>
-      <tr>
-        <th>Número</th>
-      </tr>
-      <tr>
-        <td id="numero-sorteado">-</td>
-      </tr>
-    </table>
-  </div>
-  <button onclick="novoSorteio()">Novo Sorteio</button>
+<button id="iniciarJogo" onclick="iniciarJogo()">Iniciar Jogo</button>
+  <button onclick="gerarCartela()">Gerar Cartela</button>
+  <button onclick="sortearNumero()">Sortear Número</button>
+  
+  <div id="cartelas"></div>
+  <div id="sorteio"></div>
+  
   <script src="trabalhoC3 java.js"></script>
 </body>
 </html>
